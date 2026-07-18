@@ -4,15 +4,20 @@ LifeOS Conversation Engine v1
 ====================================================
 */
 
+import { Builder } from "../house/builderProfile.js";
+
 export class ConversationEngine {
 
     process(message) {
 
+        const cleanMessage = message.trim();
+
         return {
-    message,
-    status: "received",
-    timestamp: new Date().toISOString()
-};
+            original: message,
+            clean: cleanMessage,
+            status: "received",
+            timestamp: new Date().toISOString()
+        };
 
     }
 
