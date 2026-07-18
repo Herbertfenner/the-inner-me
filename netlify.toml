@@ -1,0 +1,9 @@
+# Netlify configuration for The Inner Me / Coach Herb
+# Serves the static site from the repo root and runs the Coach Herb "brain"
+# as a serverless function. The Claude API key is read from a Netlify
+# environment variable named ANTHROPIC_API_KEY (set in the Netlify dashboard),
+# so it is never stored in the site files.
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
