@@ -10,139 +10,31 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--cream:#f4ecdf;--paper:#fffaf3;--ink:#2e2820;--muted:#71675e;--gold:#c9941a;--gold2:#ecd899;--navy:#111923;--line:rgba(85,65,42,.17);--shadow:0 28px 85px rgba(0,0,0,.28)}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--navy);color:var(--ink)}body{font-family:"Cormorant Garamond",Georgia,serif}
-button,input,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
-.app{min-height:100dvh;background:var(--navy);position:relative;overflow:hidden}
-.bg{position:fixed;inset:0;background:linear-gradient(180deg,rgba(8,13,18,.1),rgba(8,13,18,.55)),url('images/house1/fire.jpg') center/cover no-repeat;transition:background-image .6s ease}
-.brand{position:fixed;top:16px;left:16px;z-index:20;display:flex;align-items:center;gap:10px;color:#fff}
-.seal{width:42px;height:42px;border-radius:50%;border:1.5px solid #e7cd89;display:grid;place-items:center;font-family:"Cinzel",serif;background:rgba(17,25,35,.45);backdrop-filter:blur(12px)}
-.brand b{font:700 12px/1 "Cinzel",serif}.brand span{display:block;font:600 8px/1.3 "Manrope",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#eadfcd;margin-top:3px}
-.memory-btn{position:fixed;top:16px;right:16px;z-index:20;border:1px solid rgba(255,255,255,.24);background:rgba(17,25,35,.42);color:#fff;border-radius:999px;padding:10px 13px;backdrop-filter:blur(12px);font:700 9px/1 "Manrope",sans-serif;letter-spacing:.12em;text-transform:uppercase}
-.stage{position:relative;z-index:2;min-height:100dvh;display:grid;place-items:center;padding:82px 14px 28px}
-.card{width:min(820px,100%);max-height:88dvh;overflow:auto;background:linear-gradient(180deg,rgba(255,250,243,.98),rgba(241,231,217,.98));border:1px solid rgba(255,255,255,.45);border-radius:28px;padding:clamp(20px,4vw,34px);box-shadow:var(--shadow)}
-.eyebrow{font:700 10px/1 "Manrope",sans-serif;letter-spacing:.25em;text-transform:uppercase;color:#8a681c;margin-bottom:10px}
-h1,h2,h3{font-family:"Cinzel",serif;margin:0}h1{font-size:clamp(39px,6vw,68px);line-height:1.02}h2{font-size:clamp(30px,4vw,48px);line-height:1.08}h3{font-size:22px}
-.lead{font-size:clamp(21px,2.7vw,29px);line-height:1.4;color:#62594f}.copy{font-size:19px;line-height:1.56;color:#62594f}
-.btn{border:none;border-radius:999px;padding:14px 21px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#302718;font:800 10px/1 "Manrope",sans-serif;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 10px 24px rgba(201,148,26,.21)}
-.btn.ghost{background:#fff;color:#7c611f;border:1px solid var(--line);box-shadow:none}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:16px;background:#fff;padding:16px;color:var(--ink);font-size:19px}textarea{min-height:128px;resize:vertical}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.chip{border:1px solid var(--line);background:#fffaf1;border-radius:999px;padding:9px 12px;color:#685c50;font-size:15px}.chip.active{border-color:var(--gold);background:#fff0c7}
-.progress{display:flex;gap:7px;margin-bottom:22px}.progress span{flex:1;height:5px;border-radius:999px;background:rgba(85,65,42,.14)}.progress span.on{background:linear-gradient(90deg,var(--gold2),var(--gold))}
-.moment{display:none}.moment.active{display:block;animation:in .35s ease}@keyframes in{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
-.thread{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.thread span{background:#fff2c8;border:1px solid rgba(201,148,26,.27);padding:7px 10px;border-radius:999px;font-size:13px}.thread i{font-style:normal;font:700 8px/1 "Manrope",sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#8a681c;margin-right:5px}
-.turns{margin-top:18px}.turn{padding:14px 0;border-top:1px solid var(--line)}.turn.you{font-style:italic;color:#7c611f}.turn.coach b{font-family:"Cinzel",serif;font-size:13px}.turn p{margin:5px 0 0;font-size:18px;line-height:1.52}.thinking{opacity:.68;font-style:italic}
-.followup{margin-top:14px;padding:16px;border-radius:16px;background:#fff7df;border-left:4px solid var(--gold)}.followup h3{font-size:18px;margin-bottom:8px}.followup textarea{min-height:100px}.followup .actions{margin-top:10px}
-.house-ready{margin-top:16px;padding:17px;border-radius:17px;background:#eef3eb;border:1px solid rgba(88,126,78,.2)}.house-ready p{margin:0;font-size:18px;line-height:1.5}
-.field-label{display:block;font:700 9px/1 "Manrope",sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#8a681c;margin:14px 0 7px}
-.plan{display:grid;gap:11px;margin-top:16px}.plan-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px}.plan-card small{font:700 9px/1 "Manrope",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8a681c}.plan-card p{font-size:17px;line-height:1.48;color:#5f554b;margin:7px 0 0}
-.memory{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);z-index:50;background:#fffaf3;transform:translateX(105%);transition:.3s ease;box-shadow:-20px 0 65px rgba(0,0,0,.25);display:flex;flex-direction:column}.memory.open{transform:none}.memory-head{padding:18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.memory-list{padding:16px;overflow:auto}.memory-item{padding:14px 0;border-top:1px solid var(--line)}.memory-item:first-child{border-top:none}.memory-item p{font-size:17px;color:#62594f}.close{border:none;background:transparent;font-size:26px}
-.scope{font:600 11px/1.45 "Manrope",sans-serif;color:#7a6f64;background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px;margin-top:16px}
-@media(max-width:640px){.brand b,.brand span{display:none}.stage{align-items:end;padding:72px 10px 10px}.card{max-height:90dvh;border-radius:24px}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%}}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--navy);color:var(--ink)}body{font-family:"Cormorant Garamond",Georgia,serif}button,input,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}:focus-visible{outline:3px solid var(--gold);outline-offset:3px}.app{min-height:100dvh;background:var(--navy);position:relative;overflow:hidden}.bg{position:fixed;inset:0;background:linear-gradient(180deg,rgba(8,13,18,.1),rgba(8,13,18,.55)),url('images/house1/fire.jpg') center/cover no-repeat;transition:background-image .6s ease}.brand{position:fixed;top:16px;left:16px;z-index:20;display:flex;align-items:center;gap:10px;color:#fff}.seal{width:42px;height:42px;border-radius:50%;border:1.5px solid #e7cd89;display:grid;place-items:center;font-family:"Cinzel",serif;background:rgba(17,25,35,.45);backdrop-filter:blur(12px)}.brand b{font:700 12px/1 "Cinzel",serif}.brand span{display:block;font:600 8px/1.3 "Manrope",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#eadfcd;margin-top:3px}.memory-btn{position:fixed;top:16px;right:16px;z-index:20;border:1px solid rgba(255,255,255,.24);background:rgba(17,25,35,.42);color:#fff;border-radius:999px;padding:10px 13px;backdrop-filter:blur(12px);font:700 9px/1 "Manrope",sans-serif;letter-spacing:.12em;text-transform:uppercase}.memory-count{display:inline-grid;place-items:center;min-width:18px;height:18px;margin-left:6px;border-radius:999px;background:var(--gold);color:#251d10;font-size:9px}.stage{position:relative;z-index:2;min-height:100dvh;display:grid;place-items:center;padding:82px 14px 28px}.card{width:min(820px,100%);max-height:88dvh;overflow:auto;background:linear-gradient(180deg,rgba(255,250,243,.98),rgba(241,231,217,.98));border:1px solid rgba(255,255,255,.45);border-radius:28px;padding:clamp(20px,4vw,34px);box-shadow:var(--shadow)}.eyebrow{font:700 10px/1 "Manrope",sans-serif;letter-spacing:.25em;text-transform:uppercase;color:#8a681c;margin-bottom:10px}h1,h2,h3{font-family:"Cinzel",serif;margin:0}h1{font-size:clamp(39px,6vw,68px);line-height:1.02}h2{font-size:clamp(30px,4vw,48px);line-height:1.08}h3{font-size:22px}.lead{font-size:clamp(21px,2.7vw,29px);line-height:1.4;color:#62594f}.copy{font-size:19px;line-height:1.56;color:#62594f}.btn{border:none;border-radius:999px;padding:14px 21px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#302718;font:800 10px/1 "Manrope",sans-serif;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 10px 24px rgba(201,148,26,.21)}.btn.ghost{background:#fff;color:#7c611f;border:1px solid var(--line);box-shadow:none}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:16px;background:#fff;padding:16px;color:var(--ink);font-size:19px}textarea{min-height:128px;resize:vertical}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.chip{border:1px solid var(--line);background:#fffaf1;border-radius:999px;padding:9px 12px;color:#685c50;font-size:15px}.chip.active{border-color:var(--gold);background:#fff0c7}.progress{display:flex;gap:7px;margin-bottom:22px}.progress span{flex:1;height:5px;border-radius:999px;background:rgba(85,65,42,.14)}.progress span.on{background:linear-gradient(90deg,var(--gold2),var(--gold))}.moment{display:none}.moment.active{display:block;animation:in .35s ease}@keyframes in{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}.thread{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.thread span{background:#fff2c8;border:1px solid rgba(201,148,26,.27);padding:7px 10px;border-radius:999px;font-size:13px}.thread i{font-style:normal;font:700 8px/1 "Manrope",sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#8a681c;margin-right:5px}.turns{margin-top:18px}.turn{padding:14px 0;border-top:1px solid var(--line)}.turn.you{font-style:italic;color:#7c611f}.turn.coach b{font-family:"Cinzel",serif;font-size:13px}.turn p{margin:5px 0 0;font-size:18px;line-height:1.52}.thinking{opacity:.68;font-style:italic}.followup{margin-top:14px;padding:16px;border-radius:16px;background:#fff7df;border-left:4px solid var(--gold)}.followup h3{font-size:18px;margin-bottom:8px}.followup textarea{min-height:100px}.followup .actions{margin-top:10px}.house-ready{margin-top:16px;padding:17px;border-radius:17px;background:#eef3eb;border:1px solid rgba(88,126,78,.2)}.house-ready p{margin:0;font-size:18px;line-height:1.5}.field-label{display:block;font:700 9px/1 "Manrope",sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#8a681c;margin:14px 0 7px}.plan{display:grid;gap:11px;margin-top:16px}.plan-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px}.plan-card small{font:700 9px/1 "Manrope",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8a681c}.plan-card p{font-size:17px;line-height:1.48;color:#5f554b;margin:7px 0 0}.memory{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);z-index:50;background:#fffaf3;transform:translateX(105%);transition:.3s ease;box-shadow:-20px 0 65px rgba(0,0,0,.25);display:flex;flex-direction:column}.memory.open{transform:none}.memory-head{padding:18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.memory-list{padding:16px;overflow:auto}.memory-item{padding:14px 0;border-top:1px solid var(--line)}.memory-item:first-child{border-top:none}.memory-item p{font-size:17px;color:#62594f}.memory-item .meta{font:700 9px/1.5 "Manrope",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#8a681c}.close{border:none;background:transparent;font-size:26px}.scope{font:600 11px/1.45 "Manrope",sans-serif;color:#7a6f64;background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px;margin-top:16px}@media(max-width:640px){.brand b,.brand span{display:none}.stage{align-items:end;padding:72px 10px 10px}.card{max-height:90dvh;border-radius:24px}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%}}
 </style>
 </head>
 <body>
-<div class="app">
-<div class="bg" id="bg"></div>
-<div class="brand"><div class="seal">L</div><div><b>LifeOS Alpha</b><span>The Living Conversation Engine</span></div></div>
-<button class="memory-btn" onclick="Life.openMemory()">House Memory ✦</button>
-
-<main class="stage">
-<section class="card">
-<div class="progress" id="progress"></div>
-
-<div class="moment active" data-moment="0">
-  <div class="eyebrow">Arrival</div>
-  <h1>You can be honest here.</h1>
-  <p class="lead" id="arrivalCopy">You do not have to have it all together before you begin. Start with what is real.</p>
-  <div class="actions"><button class="btn" onclick="Life.start()">Begin the conversation</button></div>
-  <div class="scope">LifeOS offers guided coaching and recovery-oriented support. It does not replace licensed therapy, medical care, crisis services, legal advice, or financial advice.</div>
-</div>
-
-<div class="moment" data-moment="1">
-  <div class="eyebrow" id="roomLabel">The Hearth</div>
-  <h2 id="openingQuestion">What is really going on with you right now?</h2>
-  <p class="copy">Say it in your own words. You do not have to make it sound good, strong, or spiritual.</p>
-  <textarea id="openingInput" placeholder="Write what is true for you..."></textarea>
-  <div class="chips">
-    <button class="chip" onclick="Life.fillOpening('I have been holding a lot in.')">I have been holding a lot in.</button>
-    <button class="chip" onclick="Life.fillOpening('I know better, but I keep falling into the same pattern.')">I keep repeating a pattern.</button>
-    <button class="chip" onclick="Life.fillOpening('Something has to change, and I need help finding the first step.')">I need a first step.</button>
-  </div>
-  <div class="actions"><button class="btn" onclick="Life.beginLoop()">This is what I want to talk about</button></div>
-</div>
-
-<div class="moment" data-moment="2">
-  <div class="eyebrow">Living Conversation</div>
-  <h2>Let’s stay with this until it becomes clear.</h2>
-  <div class="thread" id="thread"></div>
-  <div class="turns" id="turns"></div>
-  <div id="followupHost"></div>
-  <div id="readyHost"></div>
-</div>
-
-<div class="moment" data-moment="3">
-  <div class="eyebrow">Choice</div>
-  <h2>What is one choice that would move you in a healthier direction?</h2>
-  <p class="copy">Not a perfect answer. One choice you can respect yourself for making.</p>
-  <div class="chips" id="choiceChips">
-    <button class="chip" onclick="Life.pickChoice(this,'I will slow down before I respond.')">Slow down before I respond.</button>
-    <button class="chip" onclick="Life.pickChoice(this,'I will tell one safe person what is really going on.')">Tell one safe person.</button>
-    <button class="chip" onclick="Life.pickChoice(this,'I will say the honest sentence I have been avoiding.')">Say the honest sentence.</button>
-    <button class="chip" onclick="Life.pickChoice(this,'I will take one small step instead of waiting for the whole plan.')">Take one small step.</button>
-  </div>
-  <textarea id="choiceText" placeholder="Or write your choice in your own words..."></textarea>
-  <div class="actions"><button class="btn" onclick="Life.commitChoice()">Use this choice</button></div>
-</div>
-
-<div class="moment" data-moment="4">
-  <div class="eyebrow">Action</div>
-  <h2>Turn the choice into something you can actually do.</h2>
-  <label class="field-label">What exactly will you do?</label><textarea id="action"></textarea>
-  <label class="field-label">When will you do it?</label><input type="text" id="when" placeholder="Today at 6 PM, tomorrow morning, before Friday...">
-  <label class="field-label">Who can support you without controlling you?</label><input type="text" id="support" placeholder="A person, group, mentor, sponsor, counselor, pastor...">
-  <label class="field-label">What usually gets in the way?</label><input type="text" id="barrier" placeholder="Fear, distraction, old patterns, cravings, shame...">
-  <label class="field-label">What will you do differently when it shows up?</label><textarea id="counter"></textarea>
-  <div class="actions"><button class="btn" onclick="Life.buildPlan()">Build a plan that can survive real life</button></div>
-</div>
-
-<div class="moment" data-moment="5">
-  <div class="eyebrow">Your Plan</div>
-  <h2>A plan that can survive real life.</h2>
-  <div class="plan" id="plan"></div>
-  <div class="actions"><button class="btn" onclick="Life.complete()">Save this moment</button></div>
-</div>
-
-<div class="moment" data-moment="6">
-  <div class="eyebrow">Return</div>
-  <h2>You have something real to return to.</h2>
-  <p class="lead" id="returnCopy">Come back and tell the truth about what happened: you did it, you tried, or you did not do it yet. None of those answers make you a failure.</p>
-  <div class="actions"><button class="btn" onclick="Life.resetForReturn()">Begin another conversation</button><button class="btn ghost" onclick="Life.openMemory()">Visit House Memory</button></div>
-</div>
-</section>
-</main>
-
-<aside class="memory" id="memory">
-  <div class="memory-head"><div><div class="eyebrow">House Memory</div><h3>Moments LifeOS is holding</h3></div><button class="close" onclick="Life.closeMemory()">&times;</button></div>
-  <div class="memory-list" id="memoryList"></div>
-</aside>
-</div>
-
-<script>
-const KEY='lifeos-alpha-v1';
-const ROOMS=[
-{name:'The Hearth',img:'images/house1/fire.jpg',question:'What is really going on with you right now?'},
-{name:'The Garden',img:'images/house1/living-garden.jpg',question:'What are you trying to become stronger, healthier, or more consistent in?'},
-{name:'The Bridge',img:'images/house1/bridge.jpg',question:'Which relationship is affecting your peace, choices, or sense of self right now?'},
-{name:'The Forge',img:'images/house1/forge.jpg',question:'What happened, and what has it been doing to you since?'},
-{name:'The Mirror',img:'images/house1/museum-of-mirrors.jpg',question:'What have you been saying—or believing—about yourself lately?'}
-];
-
-const Life={
-state:null,room:null,conversation:[],depth:0,maxDepth:4,choice:'',plan:null,sending:false,
-fresh(){return{visits:0,roomIndex:0,memories:[]}},
-load(){try{this.state=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!this.state)this.state=this.fresh()},
-save(){localStorage.setItem(KEY,JSON.stringify(this.state))},
-boot(){this.load();this.state.visits++;this.save();this.renderMemory();this.renderProgress(0);if(this.state.visits>1)document.getElementById('arrivalCopy').textContent='You can return without explaining why it took so long. Start with what is true today.'},
+<div class="app"><div class="bg" id="bg"></div><div class="brand"><div class="seal">L</div><div><b>LifeOS Alpha</b><span>The Living Conversation Engine</span></div></div><button class="memory-btn" onclick="Life.openMemory()">House Memory ✦ <span class="memory-count" id="memoryCount">0</span></button>
+<main class="stage"><section class="card"><div class="progress" id="progress"></div>
+<div class="moment active" data-moment="0"><div class="eyebrow">Arrival</div><h1>You can be honest here.</h1><p class="lead" id="arrivalCopy">You do not have to have it all together before you begin. Start with what is real.</p><div class="actions"><button class="btn" onclick="Life.start()">Begin the conversation</button></div><div class="scope">LifeOS offers guided coaching and recovery-oriented support. It does not replace licensed therapy, medical care, crisis services, legal advice, or financial advice.</div></div>
+<div class="moment" data-moment="1"><div class="eyebrow" id="roomLabel">The Hearth</div><h2 id="openingQuestion">What is really going on with you right now?</h2><p class="copy">Say it in your own words. You do not have to make it sound good, strong, or spiritual.</p><textarea id="openingInput" placeholder="Write what is true for you..."></textarea><div class="chips"><button class="chip" onclick="Life.fillOpening('I have been holding a lot in.')">I have been holding a lot in.</button><button class="chip" onclick="Life.fillOpening('I know better, but I keep falling into the same pattern.')">I keep repeating a pattern.</button><button class="chip" onclick="Life.fillOpening('Something has to change, and I need help finding the first step.')">I need a first step.</button></div><div class="actions"><button class="btn" onclick="Life.beginLoop()">This is what I want to talk about</button></div></div>
+<div class="moment" data-moment="2"><div class="eyebrow">Living Conversation</div><h2>Let’s stay with this until it becomes clear.</h2><div class="thread" id="thread"></div><div class="turns" id="turns"></div><div id="followupHost"></div><div id="readyHost"></div></div>
+<div class="moment" data-moment="3"><div class="eyebrow">Choice</div><h2>What is one choice that would move you in a healthier direction?</h2><p class="copy">Not a perfect answer. One choice you can respect yourself for making.</p><div class="chips" id="choiceChips"><button class="chip" onclick="Life.pickChoice(this,'I will slow down before I respond.')">Slow down before I respond.</button><button class="chip" onclick="Life.pickChoice(this,'I will tell one safe person what is really going on.')">Tell one safe person.</button><button class="chip" onclick="Life.pickChoice(this,'I will say the honest sentence I have been avoiding.')">Say the honest sentence.</button><button class="chip" onclick="Life.pickChoice(this,'I will take one small step instead of waiting for the whole plan.')">Take one small step.</button></div><textarea id="choiceText" placeholder="Or write your choice in your own words..."></textarea><div class="actions"><button class="btn" onclick="Life.commitChoice()">Use this choice</button></div></div>
+<div class="moment" data-moment="4"><div class="eyebrow">Action</div><h2>Turn the choice into something you can actually do.</h2><label class="field-label">What exactly will you do?</label><textarea id="action"></textarea><label class="field-label">When will you do it?</label><input type="text" id="when" placeholder="Today at 6 PM, tomorrow morning, before Friday..."><label class="field-label">Who can support you without controlling you?</label><input type="text" id="support" placeholder="A person, group, mentor, sponsor, counselor, pastor..."><label class="field-label">What usually gets in the way?</label><input type="text" id="barrier" placeholder="Fear, distraction, old patterns, cravings, shame..."><label class="field-label">What will you do differently when it shows up?</label><textarea id="counter"></textarea><div class="actions"><button class="btn" onclick="Life.buildPlan()">Build a plan that can survive real life</button></div></div>
+<div class="moment" data-moment="5"><div class="eyebrow">Your Plan</div><h2>A plan that can survive real life.</h2><div class="plan" id="plan"></div><div class="actions"><button class="btn" onclick="Life.complete()">Save this moment</button></div></div>
+<div class="moment" data-moment="6"><div class="eyebrow">Return</div><h2>You have something real to return to.</h2><p class="lead" id="returnCopy">Come back and tell the truth about what happened: you did it, you tried, or you did not do it yet. None of those answers make you a failure.</p><div class="actions"><button class="btn" onclick="Life.resetForReturn()">Begin another conversation</button><button class="btn ghost" onclick="Life.openMemory()">Visit House Memory</button></div></div>
+</section></main><aside class="memory" id="memory"><div class="memory-head"><div><div class="eyebrow">House Memory</div><h3>Moments LifeOS is holding</h3></div><button class="close" onclick="Life.closeMemory()">&times;</button></div><div class="memory-list" id="memoryList"></div></aside></div>
+<script type="module">
+import { HouseMemory } from './memory/memory.js';
+const APP_KEY='lifeos-alpha-v1';
+const MIGRATION_KEY='lifeos-memory-engine-v1-migrated';
+const ROOMS=[{name:'The Hearth',img:'images/house1/fire.jpg',question:'What is really going on with you right now?'},{name:'The Garden',img:'images/house1/living-garden.jpg',question:'What are you trying to become stronger, healthier, or more consistent in?'},{name:'The Bridge',img:'images/house1/bridge.jpg',question:'Which relationship is affecting your peace, choices, or sense of self right now?'},{name:'The Forge',img:'images/house1/forge.jpg',question:'What happened, and what has it been doing to you since?'},{name:'The Mirror',img:'images/house1/museum-of-mirrors.jpg',question:'What have you been saying—or believing—about yourself lately?'}];
+const Life={state:null,room:null,conversation:[],depth:0,maxDepth:4,choice:'',plan:null,sending:false,
+fresh(){return{visits:0,roomIndex:0}},
+load(){try{this.state=JSON.parse(localStorage.getItem(APP_KEY))}catch(e){}if(!this.state)this.state=this.fresh();if(!Number.isFinite(this.state.visits))this.state.visits=0;if(!Number.isFinite(this.state.roomIndex))this.state.roomIndex=0;this.migrateLegacyMemories()},
+migrateLegacyMemories(){if(localStorage.getItem(MIGRATION_KEY))return;let legacy;try{legacy=JSON.parse(localStorage.getItem(APP_KEY))}catch(e){}const items=Array.isArray(legacy?.memories)?legacy.memories:[];items.forEach(m=>HouseMemory.remember({...m,type:'session',source:'legacy'}));if(legacy&&'memories' in legacy){delete legacy.memories;localStorage.setItem(APP_KEY,JSON.stringify(legacy));this.state=legacy}localStorage.setItem(MIGRATION_KEY,'true')},
+save(){localStorage.setItem(APP_KEY,JSON.stringify(this.state))},
+boot(){this.load();this.state.visits++;this.save();this.renderMemory();this.renderProgress(0);if(this.state.visits>1)document.getElementById('arrivalCopy').textContent='Welcome back. You can return without explaining why it took so long. Start with what is true today.'},
 renderProgress(n){const p=document.getElementById('progress');if(!p.children.length)p.innerHTML=Array.from({length:7},()=>'<span></span>').join('');[...p.children].forEach((x,i)=>x.classList.toggle('on',i<=n))},
 go(n){document.querySelectorAll('.moment').forEach(m=>m.classList.toggle('active',Number(m.dataset.moment)===n));this.renderProgress(n);document.querySelector('.card').scrollTo({top:0,behavior:'smooth'})},
 start(){this.room=ROOMS[this.state.roomIndex%ROOMS.length];document.getElementById('roomLabel').textContent=this.room.name;document.getElementById('openingQuestion').textContent=this.room.question;document.getElementById('bg').style.backgroundImage=`linear-gradient(180deg,rgba(8,13,18,.1),rgba(8,13,18,.55)),url('${this.room.img}')`;this.go(1)},
@@ -150,8 +42,8 @@ fillOpening(t){document.getElementById('openingInput').value=t;document.getEleme
 crisis(t){return /\b(suicid|kill myself|end my life|want to die|hurt myself|harm myself|self-harm|overdose|kill someone|hurt someone)\b/i.test(String(t||''))},
 beginLoop(){const t=document.getElementById('openingInput').value.trim();if(!t)return;if(this.crisis(t)){alert('Please pause and reach immediate human support. In the U.S., call or text 988. Call 911 if there is immediate danger.');return}this.conversation=[{role:'user',content:t}];this.depth=1;this.renderConversation();this.go(2);this.getCoachTurn()},
 renderConversation(){const host=document.getElementById('turns');host.innerHTML=this.conversation.map(m=>`<div class="turn ${m.role==='user'?'you':'coach'}">${m.role==='assistant'?'<b>Coach Herb</b>':''}<p>${m.role==='user'?'You: “'+esc(m.content)+'”':esc(m.content).replace(/\n+/g,'<br>')}</p></div>`).join('');const first=this.conversation.find(m=>m.role==='user');document.getElementById('thread').innerHTML=first?`<span><i>Working on</i>${esc(short(first.content,55))}</span>`:''},
-appendThinking(){const host=document.getElementById('turns');host.insertAdjacentHTML('beforeend','<div class="turn coach thinking" id="thinking"><b>Coach Herb</b><p>Thinking with you…</p></div>')},
-async getCoachTurn(){if(this.sending)return;this.sending=true;this.appendThinking();document.getElementById('followupHost').innerHTML='';document.getElementById('readyHost').innerHTML='';let result;try{result=await this.askAPI()}catch(e){result=this.fallback()}document.getElementById('thinking')?.remove();this.conversation.push({role:'assistant',content:result.reply});this.renderConversation();if(result.question){this.renderFollowup(result.question)}else if(result.ready){this.renderReady(result.summary||'I think we have enough clarity to choose a next step.')}else{this.renderFollowup('What feels most important for me to understand before we move forward?')}this.sending=false},
+appendThinking(){document.getElementById('turns').insertAdjacentHTML('beforeend','<div class="turn coach thinking" id="thinking"><b>Coach Herb</b><p>Thinking with you…</p></div>')},
+async getCoachTurn(){if(this.sending)return;this.sending=true;this.appendThinking();document.getElementById('followupHost').innerHTML='';document.getElementById('readyHost').innerHTML='';let result;try{result=await this.askAPI()}catch(e){result=this.fallback()}document.getElementById('thinking')?.remove();this.conversation.push({role:'assistant',content:result.reply});this.renderConversation();if(result.question)this.renderFollowup(result.question);else if(result.ready)this.renderReady(result.summary||'I think we have enough clarity to choose a next step.');else this.renderFollowup('What feels most important for me to understand before we move forward?');this.sending=false},
 renderFollowup(q){document.getElementById('followupHost').innerHTML=`<div class="followup"><h3>${esc(q)}</h3><textarea id="followupInput" placeholder="Answer in your own words..."></textarea><div class="actions"><button class="btn" onclick="Life.answerFollowup()">Share my answer</button><button class="btn ghost" onclick="Life.chooseReady()">I have enough clarity</button></div></div>`;setTimeout(()=>document.getElementById('followupInput')?.focus(),100)},
 answerFollowup(){const t=document.getElementById('followupInput').value.trim();if(!t)return;if(this.crisis(t)){alert('Please pause and reach immediate human support. In the U.S., call or text 988. Call 911 if there is immediate danger.');return}this.conversation.push({role:'user',content:t});this.depth++;this.renderConversation();this.getCoachTurn()},
 renderReady(summary){document.getElementById('readyHost').innerHTML=`<div class="house-ready"><p><b>The House:</b> ${esc(summary)}</p><div class="actions"><button class="btn" onclick="Life.go(3)">Choose my next step</button><button class="btn ghost" onclick="Life.renderFollowup('What still needs to be said before we choose a next step?')">Stay with this</button></div></div>`},
@@ -159,22 +51,15 @@ chooseReady(){this.renderReady('You are choosing to move forward with the clarit
 pickChoice(btn,t){document.querySelectorAll('#choiceChips .chip').forEach(x=>x.classList.remove('active'));btn.classList.add('active');this.choice=t;document.getElementById('choiceText').value=t},
 commitChoice(){const t=document.getElementById('choiceText').value.trim()||this.choice;if(!t)return;this.choice=t;document.getElementById('action').value=t;this.go(4)},
 buildPlan(){const get=id=>document.getElementById(id).value.trim();const p={action:get('action'),when:get('when'),support:get('support'),barrier:get('barrier'),counter:get('counter')};if(Object.values(p).some(v=>!v)){alert('Complete each part so the plan can work in real life.');return}this.plan=p;document.getElementById('plan').innerHTML=`<div class="plan-card"><small>The choice</small><p>${esc(this.choice)}</p></div><div class="plan-card"><small>The action</small><p>${esc(p.action)} — ${esc(p.when)}</p></div><div class="plan-card"><small>Support</small><p>${esc(p.support)}</p></div><div class="plan-card"><small>If / Then</small><p><b>IF</b> ${esc(p.barrier)} shows up, <b>THEN</b> I will ${esc(p.counter)}.</p></div><div class="plan-card"><small>Return question</small><p>What happened when you tried this—completed, attempted, or not yet?</p></div>`;this.go(5)},
-complete(){const first=this.conversation.find(m=>m.role==='user')?.content||'';this.state.memories.push({room:this.room.name,date:new Date().toLocaleDateString(),truth:first,choice:this.choice,action:this.plan.action,status:'active'});this.state.roomIndex=(this.state.roomIndex+1)%ROOMS.length;this.save();this.renderMemory();document.getElementById('returnCopy').textContent=`LifeOS will remember that in ${this.room.name}, you decided: “${this.choice}” Come back and tell the truth about what happened.`;this.go(6)},
+complete(){const first=this.conversation.find(m=>m.role==='user')?.content||'';const lastCoach=[...this.conversation].reverse().find(m=>m.role==='assistant')?.content||'';const memory=HouseMemory.remember({type:'session',room:this.room.name,truth:first,choice:this.choice,action:this.plan.action,when:this.plan.when,support:this.plan.support,barrier:this.plan.barrier,counter:this.plan.counter,summary:short(lastCoach,220),status:'active',conversationTurns:this.conversation.length});this.state.roomIndex=(this.state.roomIndex+1)%ROOMS.length;this.save();this.renderMemory();document.getElementById('returnCopy').textContent=`The House saved this moment. In ${memory.room}, you decided: “${memory.choice}” Come back and tell the truth about what happened.`;this.go(6)},
 resetForReturn(){document.getElementById('openingInput').value='';this.conversation=[];this.choice='';this.plan=null;this.go(0)},
-openMemory(){document.getElementById('memory').classList.add('open')},closeMemory(){document.getElementById('memory').classList.remove('open')},
-renderMemory(){const l=document.getElementById('memoryList');if(!this.state.memories.length){l.innerHTML='<div class="memory-item"><h3>The first memory is waiting.</h3><p>LifeOS remembers meaningful conversations and lived decisions—not clicks.</p></div>';return}l.innerHTML=[...this.state.memories].reverse().map(m=>`<div class="memory-item"><div class="eyebrow">${esc(m.room)} · ${esc(m.date)}</div><h3>${esc(m.choice)}</h3><p>You entered carrying: “${esc(short(m.truth,100))}”</p><p><b>Action:</b> ${esc(m.action)}</p></div>`).join('')},
-async askAPI(){const context=`Return JSON only with keys reply, question, ready, summary.
-You are conducting a Living Conversation in ${this.room.name}.
-Conversation depth is ${this.depth}. Do not rush to action.
-If you ask a question, it MUST be placed in the question field and the interface will provide an answer box.
-Set ready=true only when the person has reached enough clarity to choose a next step, or after 4 meaningful user turns unless safety or confusion requires staying.
-reply should acknowledge, reflect meaning, and offer one useful professional insight. Do not include a follow-up question inside reply.
-question should be one focused question or null.
-summary should be a plain-language statement of what has become clear or null.`;const r=await fetch('/.netlify/functions/coach',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({mode:'conversation_engine',context,messages:this.conversation})});if(!r.ok)throw new Error('network');return await r.json()},
+openMemory(){this.renderMemory();document.getElementById('memory').classList.add('open')},closeMemory(){document.getElementById('memory').classList.remove('open')},
+renderMemory(){const memories=HouseMemory.all();document.getElementById('memoryCount').textContent=memories.length;const l=document.getElementById('memoryList');if(!memories.length){l.innerHTML='<div class="memory-item"><h3>The first memory is waiting.</h3><p>LifeOS remembers meaningful conversations and lived decisions—not clicks.</p></div>';return}l.innerHTML=[...memories].reverse().map(m=>`<div class="memory-item"><div class="eyebrow">${esc(m.room||'The House')}</div><h3>${esc(m.choice||'A meaningful moment')}</h3><p>You entered carrying: “${esc(short(m.truth,100))}”</p><p><b>Action:</b> ${esc(m.action||'Not recorded')}</p>${m.when?`<p><b>When:</b> ${esc(m.when)}</p>`:''}<div class="meta">Saved ${esc(formatDate(m.created||m.date))} · ${Number(m.conversationTurns||0)} conversation turns</div></div>`).join('')},
+async askAPI(){const context=`Return JSON only with keys reply, question, ready, summary.\nYou are conducting a Living Conversation in ${this.room.name}.\nConversation depth is ${this.depth}. Do not rush to action.\nIf you ask a question, it MUST be placed in the question field and the interface will provide an answer box.\nSet ready=true only when the person has reached enough clarity to choose a next step, or after 4 meaningful user turns unless safety or confusion requires staying.\nreply should acknowledge, reflect meaning, and offer one useful professional insight. Do not include a follow-up question inside reply.\nquestion should be one focused question or null.\nsummary should be a plain-language statement of what has become clear or null.`;const r=await fetch('/.netlify/functions/coach',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({mode:'conversation_engine',context,messages:this.conversation})});if(!r.ok)throw new Error('network');return await r.json()},
 fallback(){const last=[...this.conversation].reverse().find(m=>m.role==='user')?.content||'';if(this.depth>=3)return{reply:`I hear that “${short(last,85)}” is not just a detail—it is part of what has been keeping this situation in place. You have named enough for us to stop guessing and choose one response you can own.`,question:null,ready:true,summary:'You have named the situation, what it is doing to you, and enough of the pattern to choose a next step.'};return{reply:`I hear what you are saying in “${short(last,85)}.” You do not need to defend or clean it up. The important thing is understanding what this has been costing you and what you need now.`,question:'What has this situation been affecting most—your peace, your choices, your relationships, or the way you see yourself?',ready:false,summary:null}}
 };
-function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function short(s,n=70){s=String(s||'').trim();return s.length>n?s.slice(0,n-1)+'…':s}
-window.Life=Life;Life.boot();
+function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function short(s,n=70){s=String(s||'').trim();return s.length>n?s.slice(0,n-1)+'…':s}function formatDate(value){const d=new Date(value);return Number.isNaN(d.getTime())?String(value||'recently'):d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}
+window.HouseMemory=HouseMemory;window.Life=Life;Life.boot();
 </script>
 </body>
 </html>
