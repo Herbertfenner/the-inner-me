@@ -41,10 +41,11 @@ exports.handler = async (event) => {
 
   const structuredMode = body.mode === "conversation_engine";
   const decision = normalizeDecision(body.pipeline?.decision);
+  const specialist = normalizeSpecialist(body.pipeline?.specialist);
   let system = SYSTEM_PROMPT;
 
   if (typeof body.context === "string" && body.context.trim()) {
-    system += "\n\nCURRENT LIFEOS CONTEXT:\n" + body.context.trim().slice(0, 6000);
+    system += "\n\nCURRENT LIFEOS CONTEXT:\n" + body.context.trim().slice(0, 7000);
   }
 
   if (decision) {
@@ -58,6 +59,15 @@ Signals: ${decision.signals.join(", ") || "none"}
 Instruction: ${decision.instruction}
 
 Do not ignore this route. If action planning is not allowed, keep ready=false and continue the routed conversation. If the route is safety, do not transition to ordinary coaching, Choice, or Action.`;
+  }
+
+  if (specialist) {
+    system += `\n\nACTIVE COACH HERB SPECIALTY — KEEP ONE VOICE
+Mode: ${specialist.label}
+Discipline: ${specialist.discipline}
+Specialist stance: ${specialist.stance}
+
+You are still Coach Herb. Do not announce a different assistant or persona. Let the expertise change while the relationship and voice remain continuous. Apply this specialty concretely in the response and question.`;
   }
 
   if (structuredMode) {
@@ -165,6 +175,15 @@ function normalizeDecision(value) {
   };
 }
 
+function normalizeSpecialist(value) {
+  if (!value || typeof value !== "object") return null;
+  return {
+    label: String(value.label || "Coach Herb"),
+    discipline: String(value.discipline || "integrated coaching"),
+    stance: String(value.stance || "Stay warm, direct, and focused on the Builder's next useful step.")
+  };
+}
+
 function refineQuestion(question, messages, decision) {
   const latest = [...messages].reverse().find(message => message.role === "user")?.content || "";
   const lower = latest.toLowerCase();
@@ -182,7 +201,7 @@ function refineQuestion(question, messages, decision) {
   }
 
   if (decision?.route === "recovery") {
-    return "What support do you have in your corner right now—a treatment program, sponsor, meeting, recovery coach, counselor, or safe person?";
+    return "Have you ever had a period of recovery or sobriety, even briefly, and what helped you during that time?";
   }
 
   if (decision?.route === "stabilization") {
@@ -210,7 +229,7 @@ function refineQuestion(question, messages, decision) {
   }
 
   if (decision?.route === "business") {
-    return "What single business constraint is costing you the most momentum right now?";
+    return "Who is the first real customer you can speak with, and what problem would you ask them about?";
   }
 
   if (/procrastinat|putting off|can't finish|cannot finish|stuck/.test(lower)) {
