@@ -15,8 +15,10 @@ Your natural coaching arc is:
 
 QUESTION STANDARD
 - Never ask generic filler such as "What feels most important for me to understand about this right now?"
+- Never ask what is "underneath" a quoted sentence merely because it was the last thing said.
+- Ask about the Builder, not about the wording of the Builder's sentence.
 - Never restart the conversation.
-- Ask about the specific fear, choice, relationship, obstacle, moment, or next safe action already present in the person's words.
+- Ask about the specific fear, choice, relationship, obstacle, support, future, or next safe action already present in the person's words.
 - Use one question only.
 - In safety situations, ask one immediate, practical question that helps the person connect to real human support now.
 
@@ -38,10 +40,24 @@ exports.handler = async (event) => {
   catch { return json(400, { error: "Bad request." }); }
 
   const structuredMode = body.mode === "conversation_engine";
+  const decision = normalizeDecision(body.pipeline?.decision);
   let system = SYSTEM_PROMPT;
 
   if (typeof body.context === "string" && body.context.trim()) {
     system += "\n\nCURRENT LIFEOS CONTEXT:\n" + body.context.trim().slice(0, 6000);
+  }
+
+  if (decision) {
+    system += `\n\nHOUSE DECISION — FOLLOW THIS ROUTE
+Route: ${decision.route}
+Room: ${decision.room}
+Objective: ${decision.objective}
+Action plan allowed now: ${decision.allowActionPlan ? "yes" : "no"}
+Confidence: ${decision.confidence}
+Signals: ${decision.signals.join(", ") || "none"}
+Instruction: ${decision.instruction}
+
+Do not ignore this route. If action planning is not allowed, keep ready=false and continue the routed conversation. If the route is safety, do not transition to ordinary coaching, Choice, or Action.`;
   }
 
   if (structuredMode) {
@@ -50,7 +66,7 @@ Return one JSON object only. Do not wrap it in markdown and do not place JSON in
 Use exactly these keys:
 {
   "reply": "Your compassionate reflection and useful insight. Do not include the follow-up question here.",
-  "question": "One specific follow-up question tied directly to the person's last words, or null",
+  "question": "One specific follow-up question tied directly to the person's life and the active House route, or null",
   "ready": false,
   "summary": null
 }
@@ -88,7 +104,13 @@ The reply must be normal prose. Put the follow-up question only in the question 
     if (!structuredMode) return json(200, { reply: text || "I'm here with you — say that once more for me?" });
 
     const result = parseConversationResult(text);
-    result.question = refineQuestion(result.question, messages, result.reply);
+    result.question = refineQuestion(result.question, messages, decision);
+
+    if (decision && !decision.allowActionPlan) {
+      result.ready = false;
+      result.summary = null;
+    }
+
     return json(200, result);
   } catch (error) {
     console.error("Coach Herb function error", error);
@@ -130,44 +152,78 @@ function parseConversationResult(text) {
   };
 }
 
-function refineQuestion(question, messages, reply) {
+function normalizeDecision(value) {
+  if (!value || typeof value !== "object") return null;
+  return {
+    route: String(value.route || "action"),
+    room: String(value.room || "The House"),
+    objective: String(value.objective || "Continue toward clarity."),
+    allowActionPlan: Boolean(value.allowActionPlan),
+    confidence: Number(value.confidence || 0),
+    signals: Array.isArray(value.signals) ? value.signals.map(String).slice(0, 8) : [],
+    instruction: String(value.instruction || "Continue toward clarity.")
+  };
+}
+
+function refineQuestion(question, messages, decision) {
   const latest = [...messages].reverse().find(message => message.role === "user")?.content || "";
   const lower = latest.toLowerCase();
-  const generic = !question || /what feels most important|what would you like me to understand|tell me more about this|what is most important/i.test(question);
-  if (!generic) return question;
+  const weak = !question || /what feels most important|what would you like me to understand|tell me more about this|what is most important|what is underneath/i.test(question);
+  if (!weak) return question;
 
-  if (/give up living|want to die|kill myself|end my life|suicid|hurt myself|harm myself/.test(lower)) {
+  if (decision?.route === "safety") {
     if (/no phone|don't have a phone|cannot call|can't call/.test(lower)) {
       return "Can you get to a nearby person or public place right now—a neighbor, front desk, store, fire station, police station, clinic, or emergency room?";
     }
-    if (/don't trust|do not trust|trust anyone/.test(lower)) {
-      return "Would you be willing to contact 988 by text while we stay here together?";
+    if (/\bno\b|not really|don't know|unsure/.test(lower)) {
+      return "Are you having thoughts of hurting yourself or ending your life right now?";
     }
     return "Are you in immediate danger of acting on these thoughts right now?";
   }
 
-  if (/depress|heavy|hopeless|exhausted|overwhelmed/.test(lower)) {
-    return "When did this heaviness begin feeling different from a bad day?";
+  if (decision?.route === "recovery") {
+    return "What support do you have in your corner right now—a treatment program, sponsor, meeting, recovery coach, counselor, or safe person?";
   }
+
+  if (decision?.route === "stabilization") {
+    return "What is the heaviest part of today, and who could help you carry just that part?";
+  }
+
+  if (decision?.route === "grief") {
+    return "What do you miss most about the person or life you lost?";
+  }
+
+  if (decision?.route === "relationship") {
+    return "What do you need from this relationship that you have not been able to say clearly?";
+  }
+
+  if (decision?.route === "identity") {
+    return "When did you begin believing this struggle was the same thing as who you are?";
+  }
+
+  if (decision?.route === "purpose") {
+    return "When you picture the life you are fighting for, what do you see yourself building or becoming?";
+  }
+
+  if (decision?.route === "leadership") {
+    return "What responsibility are you avoiding because the decision may disappoint someone?";
+  }
+
+  if (decision?.route === "business") {
+    return "What single business constraint is costing you the most momentum right now?";
+  }
+
   if (/procrastinat|putting off|can't finish|cannot finish|stuck/.test(lower)) {
     return "What usually happens in the moment right before you avoid the project?";
   }
-  if (/trust|betray|hurt by|let me down/.test(lower)) {
-    return "What happened that taught you it was safer not to trust people?";
-  }
   if (/afraid|fear|scared|anxious|worry/.test(lower)) {
     return "What are you afraid will happen if you take the next step?";
-  }
-  if (/relationship|marriage|husband|wife|partner|family|friend/.test(lower)) {
-    return "What do you need from this relationship that you have not been able to say clearly?";
   }
   if (/goal|project|business|build|finish|launch/.test(lower)) {
     return "What is the smallest honest step that would move this forward today?";
   }
 
-  const lastSentence = latest.split(/[.!?]+/).map(value => value.trim()).filter(Boolean).pop();
-  if (lastSentence && lastSentence.length < 140) return `What is underneath "${lastSentence}" for you?`;
-  return "What happened just before you started feeling this way?";
+  return "What changed today that made you ready to say this out loud?";
 }
 
 function tryParseJson(value) {
