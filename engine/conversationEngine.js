@@ -1,6 +1,6 @@
 /*
 ====================================================
-LifeOS Conversation Engine v3
+LifeOS Conversation Engine v4
 ====================================================
 */
 
@@ -8,9 +8,10 @@ import { Builder } from "../house/builderProfile.js";
 import { MemoryType } from "../memory/memoryClassifier.js";
 import { CoachInsights } from "../coach/insightEngine.js";
 import { BuilderBrain } from "../brain/builderBrain.js";
+import { HouseDecision } from "./decisionEngine.js";
 
 export class ConversationEngine {
-    process(message) {
+    process(message, options = {}) {
         const original = String(message ?? "");
         const clean = original.trim();
         const classification = MemoryType.classify(clean);
@@ -25,7 +26,14 @@ export class ConversationEngine {
             classification,
             profile
         });
-        const insights = this.buildInsights(profile, brain);
+        const decision = HouseDecision.decide({
+            message: clean,
+            profile,
+            brain,
+            depth: options.depth,
+            conversation: options.conversation
+        });
+        const insights = this.buildInsights(profile, brain, decision);
 
         return {
             original,
@@ -33,16 +41,21 @@ export class ConversationEngine {
             classification,
             profile,
             brain,
+            decision,
             insights,
             status: clean ? "processed" : "empty",
             timestamp: new Date().toISOString()
         };
     }
 
-    buildInsights(profile, brain) {
+    buildInsights(profile, brain, decision) {
         const insights = CoachInsights.analyze(profile);
         const recurring = brain.patterns.find(pattern => pattern.count >= 2);
         const activeCommitments = brain.commitments.filter(item => item.status === "active");
+
+        if (decision?.route) {
+            insights.unshift(`The House is routing this conversation through ${decision.room}: ${decision.objective}`);
+        }
 
         if (recurring) {
             insights.unshift(
@@ -56,11 +69,11 @@ export class ConversationEngine {
             );
         }
 
-        return [...new Set(insights)].slice(0, 6);
+        return [...new Set(insights)].slice(0, 7);
     }
 
-    context(message) {
-        const result = this.process(message);
+    context(message, options = {}) {
+        const result = this.process(message, options);
         return {
             classification: result.classification,
             profile: result.profile,
@@ -72,6 +85,7 @@ export class ConversationEngine {
                 recentTimeline: result.brain.timeline.slice(-8),
                 signals: result.brain.signals
             },
+            decision: result.decision,
             insights: result.insights
         };
     }
