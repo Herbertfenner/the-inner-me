@@ -1,6 +1,6 @@
 /*
 ====================================================
-LifeOS Conversation Engine v7
+LifeOS Conversation Engine v8
 ====================================================
 */
 
@@ -12,6 +12,7 @@ import { HouseDecision } from "./decisionEngine.js";
 import { CoachMode } from "../coach/specialistModes.js";
 import { Missions } from "../missions/missionEngine.js";
 import { Execution } from "../execution/executionEngine.js";
+import { Reflection } from "../reflection/reflectionEngine.js";
 
 export class ConversationEngine {
     process(message, options = {}) {
@@ -24,11 +25,7 @@ export class ConversationEngine {
         }
 
         const profile = Builder.getProfile();
-        const brain = BuilderBrain.observe({
-            message: clean,
-            classification,
-            profile
-        });
+        const brain = BuilderBrain.observe({ message: clean, classification, profile });
         const decision = HouseDecision.decide({
             message: clean,
             profile,
@@ -43,14 +40,16 @@ export class ConversationEngine {
             message: clean,
             learned: specialist.learned
         });
-        const execution = Execution.draft({
+        const execution = Execution.draft({ decision, mission, brain, profile, message: clean });
+        const reflection = Reflection.decide({
+            message: clean,
             decision,
-            mission,
             brain,
-            profile,
-            message: clean
+            specialist,
+            depth: Number(options.depth || 0),
+            conversation: options.conversation || []
         });
-        const insights = this.buildInsights(profile, brain, decision, specialist, mission, execution);
+        const insights = this.buildInsights(profile, brain, decision, specialist, mission, execution, reflection);
 
         return {
             original,
@@ -62,6 +61,7 @@ export class ConversationEngine {
             specialist,
             mission,
             execution,
+            reflection,
             learned: specialist.learned,
             insights,
             status: clean ? "processed" : "empty",
@@ -69,36 +69,24 @@ export class ConversationEngine {
         };
     }
 
-    buildInsights(profile, brain, decision, specialist, mission, execution) {
+    buildInsights(profile, brain, decision, specialist, mission, execution, reflection) {
         const insights = CoachInsights.analyze(profile);
         const recurring = brain.patterns.find(pattern => pattern.count >= 2);
         const activeCommitments = brain.commitments.filter(item => item.status === "active");
 
-        if (execution?.action) {
-            insights.unshift(`Execution draft prepared: ${execution.action}`);
+        if (reflection?.mode && reflection.mode !== "ask") {
+            insights.unshift(`Reflection mode selected: ${reflection.label}.`);
         }
-
-        if (mission?.title) {
-            insights.unshift(`Active mission: ${mission.title}.`);
-        }
-
-        if (specialist?.label) {
-            insights.unshift(`${specialist.label} is active through ${decision.room}.`);
-        }
-
-        if (decision?.route) {
-            insights.unshift(`The House selected the ${decision.route} path: ${decision.objective}`);
-        }
-
-        if (recurring) {
-            insights.unshift(`This theme has appeared ${recurring.count} times: ${recurring.value}`);
-        }
-
+        if (execution?.action) insights.unshift(`Execution draft prepared: ${execution.action}`);
+        if (mission?.title) insights.unshift(`Active mission: ${mission.title}.`);
+        if (specialist?.label) insights.unshift(`${specialist.label} is active through ${decision.room}.`);
+        if (decision?.route) insights.unshift(`The House selected the ${decision.route} path: ${decision.objective}`);
+        if (recurring) insights.unshift(`This theme has appeared ${recurring.count} times: ${recurring.value}`);
         if (activeCommitments.length > 0) {
             insights.push(`You currently have ${activeCommitments.length} active commitment${activeCommitments.length === 1 ? "" : "s"}.`);
         }
 
-        return [...new Set(insights)].slice(0, 9);
+        return [...new Set(insights)].slice(0, 10);
     }
 
     context(message, options = {}) {
@@ -118,6 +106,7 @@ export class ConversationEngine {
             specialist: result.specialist,
             mission: result.mission,
             execution: result.execution,
+            reflection: result.reflection,
             learned: result.learned,
             insights: result.insights
         };
