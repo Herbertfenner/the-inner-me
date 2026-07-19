@@ -1,6 +1,6 @@
 /*
 ====================================================
-LifeOS Conversation Engine v5
+LifeOS Conversation Engine v6
 ====================================================
 */
 
@@ -10,6 +10,7 @@ import { CoachInsights } from "../coach/insightEngine.js";
 import { BuilderBrain } from "../brain/builderBrain.js";
 import { HouseDecision } from "./decisionEngine.js";
 import { CoachMode } from "../coach/specialistModes.js";
+import { Missions } from "../missions/missionEngine.js";
 
 export class ConversationEngine {
     process(message, options = {}) {
@@ -35,7 +36,13 @@ export class ConversationEngine {
             conversation: options.conversation
         });
         const specialist = CoachMode.select(decision, { profile, brain, classification });
-        const insights = this.buildInsights(profile, brain, decision, specialist);
+        const mission = Missions.propose({
+            decision,
+            specialist,
+            message: clean,
+            learned: specialist.learned
+        });
+        const insights = this.buildInsights(profile, brain, decision, specialist, mission);
 
         return {
             original,
@@ -45,6 +52,7 @@ export class ConversationEngine {
             brain,
             decision,
             specialist,
+            mission,
             learned: specialist.learned,
             insights,
             status: clean ? "processed" : "empty",
@@ -52,10 +60,14 @@ export class ConversationEngine {
         };
     }
 
-    buildInsights(profile, brain, decision, specialist) {
+    buildInsights(profile, brain, decision, specialist, mission) {
         const insights = CoachInsights.analyze(profile);
         const recurring = brain.patterns.find(pattern => pattern.count >= 2);
         const activeCommitments = brain.commitments.filter(item => item.status === "active");
+
+        if (mission?.title) {
+            insights.unshift(`Active mission: ${mission.title}.`);
+        }
 
         if (specialist?.label) {
             insights.unshift(`${specialist.label} is active through ${decision.room}.`);
@@ -73,7 +85,7 @@ export class ConversationEngine {
             insights.push(`You currently have ${activeCommitments.length} active commitment${activeCommitments.length === 1 ? "" : "s"}.`);
         }
 
-        return [...new Set(insights)].slice(0, 7);
+        return [...new Set(insights)].slice(0, 8);
     }
 
     context(message, options = {}) {
@@ -91,6 +103,7 @@ export class ConversationEngine {
             },
             decision: result.decision,
             specialist: result.specialist,
+            mission: result.mission,
             learned: result.learned,
             insights: result.insights
         };

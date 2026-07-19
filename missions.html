@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LifeOS Missions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffaf3;--cream:#f2e7d8;--ink:#30291f;--muted:#71665b;--gold:#c9941a;--navy:#111923;--line:rgba(87,65,39,.16)}
+*{box-sizing:border-box}body{margin:0;background:var(--navy);color:var(--ink);font-family:"Cormorant Garamond",serif;min-height:100vh}.shell{width:min(1080px,100%);margin:auto;padding:34px 18px 70px}.top{display:flex;justify-content:space-between;align-items:center;color:#fff;margin-bottom:26px}.brand{font-family:"Cinzel",serif}.brand small{display:block;font:700 9px "Manrope",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#dec994;margin-top:5px}.link{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.24);border-radius:999px;padding:10px 14px;font:700 9px "Manrope",sans-serif;letter-spacing:.12em;text-transform:uppercase}.hero,.mission{background:linear-gradient(180deg,var(--paper),var(--cream));border-radius:26px;padding:clamp(22px,4vw,38px);box-shadow:0 25px 70px rgba(0,0,0,.25)}.hero{margin-bottom:18px}.eyebrow{font:700 9px "Manrope",sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8a681c}.hero h1,.mission h2{font-family:"Cinzel",serif;margin:8px 0}.hero h1{font-size:clamp(38px,6vw,66px);line-height:1}.hero p{font-size:21px;color:var(--muted);max-width:720px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px}.mission{position:relative}.meta{display:flex;justify-content:space-between;gap:12px;font:700 9px "Manrope",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#8a681c}.mission h2{font-size:28px}.objective{font-size:18px;color:var(--muted);line-height:1.5}.bar{height:8px;background:rgba(87,65,39,.12);border-radius:99px;overflow:hidden;margin:16px 0}.bar span{display:block;height:100%;background:linear-gradient(90deg,#ead693,var(--gold));width:0}.tasks{display:grid;gap:10px}.task{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}.task input{margin-top:5px;accent-color:var(--gold)}.task label{font-size:17px;line-height:1.35}.task.done label{text-decoration:line-through;color:#8d8276}.return{margin-top:15px}.return label{display:block;font:700 9px "Manrope",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#8a681c;margin-bottom:7px}.return textarea{width:100%;min-height:80px;border:1px solid var(--line);border-radius:14px;padding:12px;font:17px "Cormorant Garamond",serif}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}.btn{border:none;border-radius:999px;padding:11px 15px;background:linear-gradient(135deg,#ead693,var(--gold));font:800 9px "Manrope",sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#302718;cursor:pointer}.empty{text-align:center;color:#fff;padding:60px 20px}.empty a{color:#e8cc81}.status{font:700 9px "Manrope",sans-serif;letter-spacing:.1em;text-transform:uppercase}.complete{color:#53784c}@media(max-width:600px){.top{align-items:flex-start}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top"><div class="brand">LifeOS Missions<small>Progress that carries forward</small></div><a class="link" href="/">Return to the House</a></div>
+  <section class="hero"><div class="eyebrow">Mission Engine v1</div><h1>Your next steps should remember you.</h1><p>Each mission is generated from the House route, Coach Herb specialty, Builder Brain, and the life you are trying to build. Complete what is real. Return and tell the truth about what happened.</p></section>
+  <main class="grid" id="missions"></main>
+</div>
+<script type="module">
+import { Missions } from './missions/missionEngine.js';
+const host=document.getElementById('missions');
+function esc(value=''){return String(value).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function render(){const items=[...Missions.all()].reverse();if(!items.length){host.innerHTML='<div class="empty">No mission has been created yet.<br><br><a href="/">Begin a LifeOS conversation</a> and the House will create the first mission.</div>';return}host.innerHTML=items.map(m=>{const p=Missions.progress(m);return `<section class="mission"><div class="meta"><span>${esc(m.specialist)} · ${esc(m.room)}</span><span class="status ${m.status==='completed'?'complete':''}">${esc(m.status)} · ${p.done}/${p.total}</span></div><h2>${esc(m.title)}</h2><p class="objective">${esc(m.objective)}</p><div class="bar"><span style="width:${p.percent}%"></span></div><div class="tasks">${m.tasks.map(t=>`<div class="task ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} onchange="toggle('${m.id}','${t.id}')"><label>${esc(t.text)}</label></div>`).join('')}</div><div class="return"><label>Return check-in</label><textarea id="note-${m.id}" placeholder="What happened when you tried this?">${esc(m.returnNote||'')}</textarea><div class="actions"><button class="btn" onclick="saveNote('${m.id}')">Save my return</button></div></div></section>`}).join('')}
+window.toggle=(missionId,taskId)=>{Missions.toggleTask(missionId,taskId);render()};
+window.saveNote=missionId=>{Missions.addReturnNote(missionId,document.getElementById(`note-${missionId}`).value);render()};
+render();
+</script>
+</body>
+</html>
