@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LifeOS — Return</title>
+<meta name="theme-color" content="#111923">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffaf3;--cream:#f1e6d6;--ink:#302820;--muted:#6e6359;--gold:#c9941a;--gold2:#ead596;--navy:#111923;--line:rgba(87,66,43,.18);--green:#55724f}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#29384a,#111923 48%,#0b1118);font-family:"Cormorant Garamond",Georgia,serif;color:var(--ink)}.shell{width:min(980px,calc(100% - 24px));margin:auto;padding:28px 0 60px}.top{display:flex;justify-content:space-between;align-items:center;color:white;margin-bottom:22px}.brand{display:flex;gap:11px;align-items:center}.seal{width:44px;height:44px;border:1px solid #ead596;border-radius:50%;display:grid;place-items:center;font-family:"Cinzel",serif}.brand b{font:700 13px/1 "Cinzel",serif}.brand span{display:block;font:600 8px/1.4 "Manrope",sans-serif;letter-spacing:.15em;text-transform:uppercase;color:#e5dbce;margin-top:4px}.top a,.btn{border-radius:999px;text-decoration:none;padding:12px 17px;font:700 9px/1 "Manrope",sans-serif;letter-spacing:.11em;text-transform:uppercase}.top a{color:white;border:1px solid rgba(255,255,255,.22)}.panel{background:linear-gradient(145deg,rgba(255,250,243,.99),rgba(239,226,208,.98));border:1px solid rgba(255,255,255,.48);border-radius:30px;padding:clamp(24px,5vw,52px);box-shadow:0 30px 100px rgba(0,0,0,.3)}.eyebrow{font:700 9px/1 "Manrope",sans-serif;letter-spacing:.23em;text-transform:uppercase;color:#8a681c;margin-bottom:10px}h1,h2,h3{font-family:"Cinzel",serif;margin:0}h1{font-size:clamp(40px,6vw,70px);line-height:1.02}h2{font-size:clamp(23px,3vw,35px)}.lead{font-size:clamp(21px,2.8vw,30px);line-height:1.42;color:#62584e}.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-top:24px}.card{background:rgba(255,255,255,.74);border:1px solid var(--line);border-radius:19px;padding:20px}.mode{font:700 8px/1.45 "Manrope",sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#8a681c}.continuity{margin:14px 0 0;padding-left:20px}.continuity li{font-size:17px;line-height:1.45;color:#62584e;margin:7px 0}.progress{height:10px;border-radius:999px;background:#e5dbcd;overflow:hidden;margin:16px 0 8px}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold));border-radius:inherit}.meta{font:700 9px/1.4 "Manrope",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#796c60}.question{margin-top:20px;padding:20px;border-radius:18px;background:#fff6dc;border-left:4px solid var(--gold)}.question p{font-size:24px;line-height:1.35;margin:8px 0 0}.suggestion{margin-top:14px;font-size:17px;color:#6c6157}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{display:inline-block;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#2d2519}.btn.secondary{background:#fff;color:#765d22;border:1px solid var(--line)}.empty{font-size:18px;color:#74695f}@media(max-width:760px){.grid{grid-template-columns:1fr}.top{align-items:flex-start}.actions{display:grid}.btn{width:100%;text-align:center}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top"><div class="brand"><div class="seal">L</div><div><b>LifeOS</b><span>Return Engine</span></div></div><a href="home.html">Builder Home</a></header>
+<main class="panel">
+<div class="eyebrow">Welcome Back</div><h1>You are not starting over.</h1><p class="lead" id="welcome"></p>
+<div class="grid"><section class="card"><div class="eyebrow">Where The House Left You</div><h2 id="missionTitle"></h2><p class="mode" id="mode"></p><div class="progress"><span id="progressBar"></span></div><div class="meta" id="progressText"></div><ul class="continuity" id="continuity"></ul></section><aside class="card"><div class="eyebrow">The Next Honest Step</div><h2 id="step"></h2><p class="suggestion" id="pattern"></p></aside></div>
+<section class="question"><div class="eyebrow">Return Question</div><p id="prompt"></p><div class="actions"><a class="btn" href="index.html">Answer With Coach Herb</a><a class="btn secondary" href="missions.html">Open Mission</a></div></section>
+</main>
+</div>
+<script type="module">
+import { Return } from './return/returnEngine.js';
+const data=Return.snapshot();
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+document.getElementById('welcome').textContent=data.welcome;
+document.getElementById('missionTitle').textContent=data.missionTitle;
+document.getElementById('mode').textContent=`${data.specialist} · ${data.room}`;
+document.getElementById('progressBar').style.width=`${data.progress.percent}%`;
+document.getElementById('progressText').textContent=data.progress.total?`${data.progress.done} of ${data.progress.total} completed · ${data.progress.percent}%`:'No mission steps recorded yet';
+document.getElementById('continuity').innerHTML=data.continuity.map(item=>`<li>${esc(item)}</li>`).join('');
+document.getElementById('step').textContent=data.firstStep;
+document.getElementById('pattern').textContent=data.pattern?`Recurring pattern: ${data.pattern.value}`:'LifeOS is still gathering enough evidence to confirm a recurring pattern.';
+document.getElementById('prompt').textContent=data.prompt;
+</script>
+</body>
+</html>
