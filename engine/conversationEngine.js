@@ -1,6 +1,6 @@
 /*
 ====================================================
-LifeOS Conversation Engine v4
+LifeOS Conversation Engine v5
 ====================================================
 */
 
@@ -9,6 +9,7 @@ import { MemoryType } from "../memory/memoryClassifier.js";
 import { CoachInsights } from "../coach/insightEngine.js";
 import { BuilderBrain } from "../brain/builderBrain.js";
 import { HouseDecision } from "./decisionEngine.js";
+import { CoachMode } from "../coach/specialistModes.js";
 
 export class ConversationEngine {
     process(message, options = {}) {
@@ -33,7 +34,8 @@ export class ConversationEngine {
             depth: options.depth,
             conversation: options.conversation
         });
-        const insights = this.buildInsights(profile, brain, decision);
+        const specialist = CoachMode.select(decision, { profile, brain, classification });
+        const insights = this.buildInsights(profile, brain, decision, specialist);
 
         return {
             original,
@@ -42,31 +44,33 @@ export class ConversationEngine {
             profile,
             brain,
             decision,
+            specialist,
+            learned: specialist.learned,
             insights,
             status: clean ? "processed" : "empty",
             timestamp: new Date().toISOString()
         };
     }
 
-    buildInsights(profile, brain, decision) {
+    buildInsights(profile, brain, decision, specialist) {
         const insights = CoachInsights.analyze(profile);
         const recurring = brain.patterns.find(pattern => pattern.count >= 2);
         const activeCommitments = brain.commitments.filter(item => item.status === "active");
 
+        if (specialist?.label) {
+            insights.unshift(`${specialist.label} is active through ${decision.room}.`);
+        }
+
         if (decision?.route) {
-            insights.unshift(`The House is routing this conversation through ${decision.room}: ${decision.objective}`);
+            insights.unshift(`The House selected the ${decision.route} path: ${decision.objective}`);
         }
 
         if (recurring) {
-            insights.unshift(
-                `This theme has appeared ${recurring.count} times: ${recurring.value}`
-            );
+            insights.unshift(`This theme has appeared ${recurring.count} times: ${recurring.value}`);
         }
 
         if (activeCommitments.length > 0) {
-            insights.push(
-                `You currently have ${activeCommitments.length} active commitment${activeCommitments.length === 1 ? "" : "s"}.`
-            );
+            insights.push(`You currently have ${activeCommitments.length} active commitment${activeCommitments.length === 1 ? "" : "s"}.`);
         }
 
         return [...new Set(insights)].slice(0, 7);
@@ -86,6 +90,8 @@ export class ConversationEngine {
                 signals: result.brain.signals
             },
             decision: result.decision,
+            specialist: result.specialist,
+            learned: result.learned,
             insights: result.insights
         };
     }
