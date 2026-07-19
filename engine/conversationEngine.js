@@ -1,6 +1,6 @@
 /*
 ====================================================
-LifeOS Conversation Engine v6
+LifeOS Conversation Engine v7
 ====================================================
 */
 
@@ -11,6 +11,7 @@ import { BuilderBrain } from "../brain/builderBrain.js";
 import { HouseDecision } from "./decisionEngine.js";
 import { CoachMode } from "../coach/specialistModes.js";
 import { Missions } from "../missions/missionEngine.js";
+import { Execution } from "../execution/executionEngine.js";
 
 export class ConversationEngine {
     process(message, options = {}) {
@@ -42,7 +43,14 @@ export class ConversationEngine {
             message: clean,
             learned: specialist.learned
         });
-        const insights = this.buildInsights(profile, brain, decision, specialist, mission);
+        const execution = Execution.draft({
+            decision,
+            mission,
+            brain,
+            profile,
+            message: clean
+        });
+        const insights = this.buildInsights(profile, brain, decision, specialist, mission, execution);
 
         return {
             original,
@@ -53,6 +61,7 @@ export class ConversationEngine {
             decision,
             specialist,
             mission,
+            execution,
             learned: specialist.learned,
             insights,
             status: clean ? "processed" : "empty",
@@ -60,10 +69,14 @@ export class ConversationEngine {
         };
     }
 
-    buildInsights(profile, brain, decision, specialist, mission) {
+    buildInsights(profile, brain, decision, specialist, mission, execution) {
         const insights = CoachInsights.analyze(profile);
         const recurring = brain.patterns.find(pattern => pattern.count >= 2);
         const activeCommitments = brain.commitments.filter(item => item.status === "active");
+
+        if (execution?.action) {
+            insights.unshift(`Execution draft prepared: ${execution.action}`);
+        }
 
         if (mission?.title) {
             insights.unshift(`Active mission: ${mission.title}.`);
@@ -85,7 +98,7 @@ export class ConversationEngine {
             insights.push(`You currently have ${activeCommitments.length} active commitment${activeCommitments.length === 1 ? "" : "s"}.`);
         }
 
-        return [...new Set(insights)].slice(0, 8);
+        return [...new Set(insights)].slice(0, 9);
     }
 
     context(message, options = {}) {
@@ -104,6 +117,7 @@ export class ConversationEngine {
             decision: result.decision,
             specialist: result.specialist,
             mission: result.mission,
+            execution: result.execution,
             learned: result.learned,
             insights: result.insights
         };
